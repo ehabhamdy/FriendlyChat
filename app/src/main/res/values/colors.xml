@@ -4,4 +4,12 @@
     <color name="colorPrimaryDark">#E65100</color>
     <color name="colorAccent">#2E7D32</color>
     <color name="colorTitle">#ffffff</color>
+
+    <color name="material_green_50">#fcf6eb</color>
+    <color name="material_green_500">#FF9800</color>
+    <color name="material_green_700">#E65100</color>
+    <color name="material_green_a200">#69F0AE</color>
+    <color name="material_lime_a700">#AEEA00</color>
+    <color name="material_purple_a700">#2E7D32</color>
+
 </resources>

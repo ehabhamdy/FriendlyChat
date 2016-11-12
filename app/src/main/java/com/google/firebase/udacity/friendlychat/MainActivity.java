@@ -63,9 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
     private String mUsername;
 
+    //Database
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessagesDatabaseReference;
     private ChildEventListener mChildEventListener;
+    //Authentication
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -155,11 +157,31 @@ public class MainActivity extends AppCompatActivity {
                                     .setIsSmartLockEnabled(false)
                                     .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                             new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                                    .setTheme(R.style.GreenTheme)
+                                    .setLogo(R.mipmap.ic_launcher)
                                     .build(),
                             RC_SIGN_IN);
                 }
             }
         };
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(mAuthStateListener != null)
+            // Remove Authentication Litener
+            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+
+        // Remove Database Listener
+        detachDatabaseReadListener();
+        mMessageAdapter.clear();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 
     private void onSignedInInitialize(String displayName) {
@@ -200,31 +222,14 @@ public class MainActivity extends AppCompatActivity {
     private void onSignedOurCleanUp() {
         mUsername = ANONYMOUS;
         mMessageAdapter.clear();
-        detacheReadListener();
+        detachDatabaseReadListener();
     }
 
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if(mAuthStateListener != null)
-            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
-        detacheReadListener();
-        mMessageAdapter.clear();
-    }
-
-    private void detacheReadListener() {
+    private void detachDatabaseReadListener() {
         if(mChildEventListener != null) {
             mMessagesDatabaseReference.removeEventListener(mChildEventListener);
             mChildEventListener = null;
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 
     @Override
